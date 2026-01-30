@@ -1,0 +1,187 @@
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+          <i class="bi bi-bank me-2"></i>Gestion de Tontine Digitale
+        </h1>
+        <p class="lead text-muted mb-4">
+          Gérez vos tontines de manière transparente, sécurisée et efficace
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <a routerLink="/tontines/nouvelle" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle me-2"></i>Créer une tontine
+          </a>
+          <a routerLink="/tontines" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-eye me-2"></i>Voir les tontines
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-graph-up me-2"></i>Aperçu du système</h5>
+      </div>
+      <div class="card-body">
+        <p class="card-text">
+          Cette application permet aux groupes (amis, collègues, associations, dahira, ASC, etc.) de
+          gérer leurs tontines traditionnelles de manière digitale avec un suivi en temps réel.
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card border-primary mb-3">
+              <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle me-2"></i>Pourquoi digitaliser ?
+              </div>
+              <div class="card-body">
+                <ul class="list-unstyled">
+                  <li class="mb-2">
+                    <i class="bi bi-check-circle text-success me-2"></i>Transparence totale
+                  </li>
+                  <li class="mb-2">
+                    <i class="bi bi-check-circle text-success me-2"></i>Suivi en temps réel
+                  </li>
+                  <li class="mb-2">
+                    <i class="bi bi-check-circle text-success me-2"></i>Rappels automatiques
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle text-success me-2"></i>Réduction des conflits
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <i class="bi bi-lightning-charge me-2"></i>Actions rapides
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <a routerLink="/utilisateurs/nouveau" class="btn btn-outline-success">
+                    <i class="bi bi-person-plus me-2"></i>Ajouter un membre
+                  </a>
+                  <button class="btn btn-outline-primary">
+                    <i class="bi bi-cash-coin me-2"></i>Effectuer un paiement
+                  </button>
+                  <button class="btn btn-outline-info">
+                    <i class="bi bi-arrow-repeat me-2"></i>Attribuer un tour
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-bar-chart me-2"></i>Statistiques</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="statistiques" class="text-center">
+          <div class="stat-item mb-4">
+            <div class="text-primary display-6 fw-bold">
+              {{ statistiques.total_cotisations | number: '1.0-0' }}
+            </div>
+            <small class="text-muted">Total des cotisations (FCFA)</small>
+          </div>
+
+          <div class="row text-center">
+            <div class="col-6 mb-3">
+              <div class="text-success h4 fw-bold">
+                {{ statistiques.total_distribue | number: '1.0-0' }}
+              </div>
+              <small class="text-muted">Total distribué</small>
+            </div>
+            <div class="col-6 mb-3">
+              <div class="text-warning h4 fw-bold">
+                {{ statistiques.solde_restant | number: '1.0-0' }}
+              </div>
+              <small class="text-muted">Solde restant</small>
+            </div>
+            <div class="col-6">
+              <div class="text-info h4 fw-bold">{{ statistiques.membres_actifs }}</div>
+              <small class="text-muted">Membres actifs</small>
+            </div>
+            <div class="col-6">
+              <div class="text-secondary h4 fw-bold">{{ statistiques.tours_realises }}</div>
+              <small class="text-muted">Tours réalisés</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div *ngIf="derniereTontine" class="alert alert-light border">
+            <h6 class="alert-heading"><i class="bi bi-clock-history me-2"></i>Dernière tontine</h6>
+            <p class="mb-1">{{ derniereTontine.nom }}</p>
+            <small class="text-muted">
+              {{ derniereTontine.montant | number }} FCFA - {{ derniereTontine.frequence }}
+            </small>
+          </div>
+
+          <div *ngIf="prochainPaiement" class="alert alert-warning border">
+            <h6 class="alert-heading"><i class="bi bi-alarm me-2"></i>Prochain paiement</h6>
+            <p class="mb-1">Dans {{ getProchainPaiementJours() }} jours</p>
+            <small class="text-muted">
+              {{ prochainPaiement.montant | number }} FCFA -
+              {{ prochainPaiement.date | date: 'dd/MM/yyyy' }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-speedometer2 me-2"></i>Guide rapide</h5>
+      </div>
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-md-3 mb-3">
+            <div class="p-3 border rounded">
+              <i class="bi bi-people display-6 text-primary mb-3"></i>
+              <h6>1. Créer des utilisateurs</h6>
+              <p class="text-muted small">Ajoutez tous les membres participants</p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="p-3 border rounded">
+              <i class="bi bi-cash-stack display-6 text-success mb-3"></i>
+              <h6>2. Créer une tontine</h6>
+              <p class="text-muted small">Définissez les paramètres de la tontine</p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="p-3 border rounded">
+              <i class="bi bi-person-plus display-6 text-info mb-3"></i>
+              <h6>3. Ajouter des membres</h6>
+              <p class="text-muted small">Inscrivez les membres à la tontine</p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="p-3 border rounded">
+              <i class="bi bi-cash-coin display-6 text-warning mb-3"></i>
+              <h6>4. Gérer les paiements</h6>
+              <p class="text-muted small">Suivez les cotisations et distributions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

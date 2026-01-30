@@ -1,0 +1,82 @@
+/* Liste Membres Styles */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.initials {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.badge {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5em 0.8em;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-top: none;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.btn-group .btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.list-group-numbered {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+}
+
+.list-group-numbered .list-group-item {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.list-group-numbered .list-group-item:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.alert-info {
+  background-color: #cff4fc;
+  border-color: #b6effb;
+  color: #055160;
+  border-radius: 8px;
+}
+
+.form-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-header .input-group {
+    width: 100% !important;
+    margin-top: 1rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .btn-group .btn {
+    margin-bottom: 2px;
+    width: 100%;
+  }
+}

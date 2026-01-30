@@ -1,0 +1,183 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2><i class="bi bi-people me-2"></i>Liste des Utilisateurs</h2>
+    <p class="text-muted mb-0">Gérez tous les utilisateurs du système</p>
+  </div>
+  <div>
+    <a routerLink="/utilisateurs/nouveau" class="btn btn-primary">
+      <i class="bi bi-person-plus me-2"></i>Nouvel utilisateur
+    </a>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="recherche"
+            placeholder="Rechercher un utilisateur..."
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex justify-content-end align-items-center">
+          <span class="me-2 text-muted">Afficher</span>
+          <select class="form-select w-auto" [(ngModel)]="itemsParPage">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+          <span class="ms-2 text-muted">utilisateurs par page</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="chargement" class="text-center my-5">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+  <p class="mt-3">Chargement des utilisateurs...</p>
+</div>
+
+<div *ngIf="!chargement" class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th width="80">ID</th>
+        <th>Utilisateur</th>
+        <th>Contact</th>
+        <th>Rôle</th>
+        <th>Inscription</th>
+        <th width="150">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
+      <tr *ngFor="let utilisateur of utilisateursPagines">
+        <td>
+          <span class="badge bg-secondary">#{{ utilisateur.id }}</span>
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="avatar-circle me-3">
+              <span class="initials">{{ utilisateur.nom_utilisateur.charAt(0) }}</span>
+            </div>
+            <div>
+              <strong>{{ utilisateur.nom_utilisateur }}</strong>
+              <div class="text-muted small">Utilisateur</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div><i class="bi bi-telephone me-2"></i>{{ utilisateur.telephone }}</div>
+          <div class="text-muted small">
+            <i class="bi bi-envelope me-2"></i>{{ utilisateur.email }}
+          </div>
+        </td>
+        <td>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-primary': utilisateur.role === 'membre',
+              'bg-success': utilisateur.role === 'trésorier',
+              'bg-danger': utilisateur.role === 'admin',
+            }"
+          >
+            <i
+              class="bi me-1"
+              [ngClass]="{
+                'bi-person': utilisateur.role === 'membre',
+                'bi-cash-coin': utilisateur.role === 'trésorier',
+                'bi-shield': utilisateur.role === 'admin',
+              }"
+            ></i>
+            {{ utilisateur.role }}
+          </span>
+        </td>
+        <td>
+          {{ utilisateur.date_creation | date: 'dd/MM/yyyy' }}
+          <div class="text-muted small">
+            {{ utilisateur.date_creation | date: 'HH:mm' }}
+          </div>
+        </td>
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-outline-primary" title="Voir">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-outline-success" title="Modifier">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              title="Supprimer"
+              (click)="supprimerUtilisateur(utilisateur.id)"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
+<div *ngIf="!chargement && utilisateursPagines.length === 0" class="text-center py-5">
+  <i class="bi bi-people display-1 text-muted mb-3"></i>
+  <h4 class="text-muted">Aucun utilisateur trouvé</h4>
+  <p class="text-muted">Commencez par ajouter votre premier utilisateur</p>
+  <a routerLink="/utilisateurs/nouveau" class="btn btn-primary mt-2">
+    <i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur
+  </a>
+</div>
+
+<!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
+<div *ngIf="!chargement && utilisateursPagines.length > 0" class="card mt-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="text-muted">
+          <!-- UTILISER les méthodes au lieu de Math directement -->
+          Affichage de {{ getIndiceDebut() }} à {{ getIndiceFin() }} sur
+          {{ utilisateursFiltres.length }} utilisateurs
+        </span>
+      </div>
+      <nav>
+        <ul class="pagination mb-0">
+          <li class="page-item" [class.disabled]="page === 1">
+            <button class="page-link" (click)="changerPage(page - 1)">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
+
+          <li
+            *ngFor="let p of [].constructor(nombrePages); let i = index"
+            class="page-item"
+            [class.active]="page === i + 1"
+          >
+            <button class="page-link" (click)="changerPage(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page === nombrePages">
+            <button class="page-link" (click)="changerPage(page + 1)">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

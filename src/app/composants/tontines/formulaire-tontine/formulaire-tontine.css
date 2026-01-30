@@ -1,0 +1,163 @@
+/* Formulaire Tontine Styles */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.progress {
+  border-radius: 4px;
+}
+
+.progress-bar {
+  transition: width 0.5s ease;
+}
+
+.list-group-item {
+  border: 1px solid #dee2e6;
+  margin-bottom: 8px;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.alert {
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.alert-success {
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+  color: #0f5132;
+}
+
+.alert-info {
+  background-color: #cff4fc;
+  border-color: #b6effb;
+  color: #055160;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+  color: #842029;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item a {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+  color: #007bff;
+}
+
+.badge {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5em 1em;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+}
+
+.border-primary {
+  border-color: #007bff !important;
+}
+
+.border-primary .card-title {
+  color: #0056b3;
+}
+
+/* Boutons */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.btn-success:hover {
+  background-color: #146c43;
+  border-color: #146c43;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .d-flex {
+    flex-direction: column;
+  }
+
+  .d-flex > div {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}

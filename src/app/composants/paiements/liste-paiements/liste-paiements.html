@@ -1,0 +1,244 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/tontines" class="text-decoration-none">
+          <i class="bi bi-cash-stack"></i> Tontines
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tontines', tontineId]" class="text-decoration-none">
+          {{ tontineNom || 'Tontine' }}
+        </a>
+      </li>
+      <li class="breadcrumb-item active">Paiements</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="mb-1"><i class="bi bi-cash-coin me-2"></i>Gestion des paiements</h2>
+      <p class="text-muted mb-0">{{ tontineNom }}</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary" (click)="exporterPaiements()">
+        <i class="bi bi-download me-2"></i>Exporter
+      </button>
+      <button class="btn btn-outline-primary" (click)="chargerPaiements()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Actualiser
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card border-primary">
+      <div class="card-body text-center">
+        <div class="text-primary display-6 fw-bold">{{ totalPaiements | number: '1.0-0' }}</div>
+        <div class="text-muted">Total des paiements</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body text-center">
+        <div class="text-success display-6 fw-bold">{{ moyennePaiement | number: '1.0-0' }}</div>
+        <div class="text-muted">Moyenne par paiement</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body text-center">
+        <div class="text-info display-6 fw-bold">{{ nombrePaiements }}</div>
+        <div class="text-muted">Nombre de paiements</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body text-center">
+        <div class="text-warning display-6 fw-bold">{{ paiementsFiltres.length }}</div>
+        <div class="text-muted">Paiements filtrés</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h5 class="card-title mb-0">Historique des paiements</h5>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="recherche"
+                  placeholder="Rechercher..."
+                />
+              </div>
+              <div class="col-4">
+                <select class="form-select" [(ngModel)]="filtrePeriode">
+                  <option value="">Toutes périodes</option>
+                  <option value="semaine">Cette semaine</option>
+                  <option value="mois">Ce mois</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="chargement" class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2">Chargement des paiements...</p>
+        </div>
+
+        <div *ngIf="!chargement && paiementsFiltres.length === 0" class="text-center py-5">
+          <i class="bi bi-cash-coin display-4 text-muted mb-3"></i>
+          <h5 class="text-muted">Aucun paiement trouvé</h5>
+          <p class="text-muted">
+            {{
+              recherche || filtrePeriode
+                ? 'Aucun résultat pour vos critères'
+                : 'Commencez par enregistrer un paiement'
+            }}
+          </p>
+        </div>
+
+        <div *ngIf="!chargement && paiementsFiltres.length > 0" class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th width="80">ID</th>
+                <th>Membre</th>
+                <th>Montant</th>
+                <th>Période</th>
+                <th>Date</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let paiement of paiementsFiltres">
+                <td>
+                  <span class="badge bg-secondary">#{{ paiement.id }}</span>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-3">
+                      <span class="initials">{{ paiement.id_utilisateur }}</span>
+                    </div>
+                    <div>
+                      <strong>Membre #{{ paiement.id_utilisateur }}</strong>
+                      <div class="text-muted small">Utilisateur ID</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="fw-bold text-success">{{ paiement.montant | number }} FCFA</span>
+                </td>
+                <td>
+                  <span class="badge bg-info">Période {{ paiement.periode }}</span>
+                </td>
+                <td>
+                  {{ paiement.date_versement | date: 'dd/MM/yyyy' }}
+                  <div class="text-muted small">
+                    {{ paiement.date_versement | date: 'HH:mm' }}
+                  </div>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="'bg-' + getCouleurStatut(paiement)">
+                    {{ getTexteStatut(paiement) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-plus-circle me-2"></i>Nouveau paiement</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="montant" class="form-label">Montant</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              id="montant"
+              [(ngModel)]="nouveauPaiement.montant"
+              min="0"
+            />
+            <span class="input-group-text">FCFA</span>
+          </div>
+          <div class="form-text">Montant versé par le membre</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="periode" class="form-label">Période</label>
+          <select class="form-select" id="periode" [(ngModel)]="nouveauPaiement.periode">
+            <option *ngFor="let periode of getPeriodesDisponibles()" [value]="periode">
+              Période {{ periode }}
+            </option>
+          </select>
+          <div class="form-text">Période de cotisation concernée</div>
+        </div>
+
+        <button class="btn btn-success w-100" (click)="effectuerPaiement()">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer le paiement
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-pie-chart me-2"></i>Répartition par période</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="getSommeParPeriode().length === 0" class="text-center py-3">
+          <p class="text-muted mb-0">Aucune donnée disponible</p>
+        </div>
+
+        <div *ngFor="let item of getSommeParPeriode()" class="mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <span>Période {{ item.periode }}</span>
+            <span>{{ item.somme | number }} FCFA</span>
+          </div>
+          <div class="progress" style="height: 8px">
+            <div
+              class="progress-bar"
+              [style.width]="(item.somme / totalPaiements) * 100 + '%'"
+              [style.backgroundColor]="getCouleurPeriode(item.periode)"
+            ></div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="alert alert-light">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Total collecté :</strong> {{ totalPaiements | number }} FCFA
+            <div class="small mt-1">
+              Sur {{ getSommeParPeriode().length }} période{{
+                getSommeParPeriode().length !== 1 ? 's' : ''
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

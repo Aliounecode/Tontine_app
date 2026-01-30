@@ -1,0 +1,95 @@
+/* Liste Paiements Styles */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.initials {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.badge {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5em 0.8em;
+}
+
+.card {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card.border-primary {
+  border-color: #007bff !important;
+}
+
+.card.border-success {
+  border-color: #198754 !important;
+}
+
+.card.border-info {
+  border-color: #0dcaf0 !important;
+}
+
+.card.border-warning {
+  border-color: #ffc107 !important;
+}
+
+.display-6 {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-top: none;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.progress {
+  border-radius: 4px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.form-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.btn-group .btn {
+  border-radius: 6px;
+}
+
+/* Couleurs pour les périodes */
+
+/* Responsive */
+@media (max-width: 768px) {
+  .display-6 {
+    font-size: 1.8rem;
+  }
+
+  .card-header .row {
+    flex-direction: column;
+  }
+
+  .card-header .col-md-6 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}

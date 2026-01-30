@@ -1,0 +1,219 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/tontines" class="text-decoration-none">
+          <i class="bi bi-cash-stack"></i> Tontines
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tontines', tontineId]" class="text-decoration-none">
+          {{ tontineNom || 'Tontine' }}
+        </a>
+      </li>
+      <li class="breadcrumb-item active">Membres</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="mb-1"><i class="bi bi-people me-2"></i>Membres de la tontine</h2>
+      <p class="text-muted mb-0">{{ tontineNom }}</p>
+    </div>
+    <span class="badge bg-primary">
+      {{ membres.length }} membre{{ membres.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Liste des membres</h5>
+        <div class="input-group" style="width: 300px">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="recherche"
+            placeholder="Rechercher un membre..."
+          />
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="chargement" class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2">Chargement des membres...</p>
+        </div>
+
+        <div *ngIf="!chargement && membresFiltres.length === 0" class="text-center py-5">
+          <i class="bi bi-people display-4 text-muted mb-3"></i>
+          <h5 class="text-muted">Aucun membre trouvé</h5>
+          <p class="text-muted">
+            {{
+              recherche
+                ? 'Aucun résultat pour votre recherche'
+                : 'Commencez par ajouter des membres'
+            }}
+          </p>
+        </div>
+
+        <div *ngIf="!chargement && membresFiltres.length > 0" class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th width="100">Position</th>
+                <th>ID Utilisateur</th>
+                <th>Date d'adhésion</th>
+                <th width="150">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let membre of membresFiltres">
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-primary': membre.position === 1,
+                      'bg-success': membre.position === 2,
+                      'bg-info': membre.position > 2,
+                    }"
+                  >
+                    #{{ membre.position }}
+                  </span>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-3">
+                      <span class="initials">{{ membre.id_utilisateur }}</span>
+                    </div>
+                    <div>
+                      <strong>Membre #{{ membre.id_utilisateur }}</strong>
+                      <div class="text-muted small">Utilisateur ID</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ membre.date_adhesion | date: 'dd/MM/yyyy' }}
+                  <div class="text-muted small">
+                    Il y a {{ calculerJoursDepuis(membre.date_adhesion) }} jours
+                  </div>
+                </td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" title="Voir">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button
+                      class="btn btn-outline-warning"
+                      title="Modifier position"
+                      (click)="modifierPosition(membre)"
+                    >
+                      <i class="bi bi-arrow-up-down"></i>
+                    </button>
+                    <button
+                      class="btn btn-outline-danger"
+                      title="Retirer"
+                      (click)="retirerMembre(membre.id)"
+                    >
+                      <i class="bi bi-person-dash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-person-plus me-2"></i>Ajouter un membre</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="id_utilisateur" class="form-label">ID Utilisateur</label>
+          <input
+            type="number"
+            class="form-control"
+            id="id_utilisateur"
+            [(ngModel)]="nouveauMembre.id_utilisateur"
+            placeholder="Entrez l'ID de l'utilisateur"
+          />
+          <div class="form-text">L'ID doit correspondre à un utilisateur existant</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="position" class="form-label">Position</label>
+          <input
+            type="number"
+            class="form-control"
+            id="position"
+            [(ngModel)]="nouveauMembre.position"
+            [min]="1"
+            [max]="membres.length + 1"
+          />
+          <div class="form-text">Position dans l'ordre de passage (1 = premier)</div>
+        </div>
+
+        <button class="btn btn-primary w-100" (click)="ajouterMembre()">
+          <i class="bi bi-plus-circle me-2"></i>Ajouter le membre
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-diagram-3 me-2"></i>Ordre de passage</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="membres.length === 0" class="text-center py-3">
+          <p class="text-muted mb-0">Aucun membre à afficher</p>
+        </div>
+
+        <div *ngIf="membres.length > 0" class="list-group list-group-numbered">
+          <div
+            *ngFor="let membre of genererOrdrePassage()"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <div>
+              <strong>Membre #{{ membre.id_utilisateur }}</strong>
+              <div class="text-muted small">
+                Adhéré le {{ membre.date_adhesion | date: 'dd/MM/yyyy' }}
+              </div>
+            </div>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-primary': membre.position === 1,
+                'bg-success': membre.position === 2,
+                'bg-info': membre.position > 2,
+              }"
+            >
+              Position #{{ membre.position }}
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="membres.length > 0" class="mt-3">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Actuellement :</strong> Membre #{{
+              getMembreParPosition(1)?.id_utilisateur || '?'
+            }}
+            <div class="small">
+              Prochain : Membre #{{ getMembreParPosition(2)?.id_utilisateur || '?' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

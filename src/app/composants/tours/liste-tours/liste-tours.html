@@ -1,0 +1,244 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/tontines" class="text-decoration-none">
+          <i class="bi bi-cash-stack"></i> Tontines
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tontines', tontineId]" class="text-decoration-none">
+          {{ tontineNom || 'Tontine' }}
+        </a>
+      </li>
+      <li class="breadcrumb-item active">Tours</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="mb-1"><i class="bi bi-arrow-repeat me-2"></i>Gestion des tours</h2>
+      <p class="text-muted mb-0">{{ tontineNom }}</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary" (click)="exporterTours()">
+        <i class="bi bi-download me-2"></i>Exporter
+      </button>
+      <button class="btn btn-outline-primary" (click)="chargerTours()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Actualiser
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card border-primary">
+      <div class="card-body text-center">
+        <div class="text-primary display-6 fw-bold">{{ totalDistribue | number: '1.0-0' }}</div>
+        <div class="text-muted">Total distribué</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-success">
+      <div class="card-body text-center">
+        <div class="text-success display-6 fw-bold">{{ nombreTours }}</div>
+        <div class="text-muted">Nombre de tours</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-info">
+      <div class="card-body text-center">
+        <div class="text-info display-6 fw-bold">{{ getToursParMembre().length }}</div>
+        <div class="text-muted">Membres ayant reçu</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h5 class="card-title mb-0">Historique des tours</h5>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-search"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="recherche"
+                placeholder="Rechercher par membre ou période..."
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="chargement" class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2">Chargement des tours...</p>
+        </div>
+
+        <div *ngIf="!chargement && toursFiltres.length === 0" class="text-center py-5">
+          <i class="bi bi-arrow-repeat display-4 text-muted mb-3"></i>
+          <h5 class="text-muted">Aucun tour trouvé</h5>
+          <p class="text-muted">
+            {{
+              recherche ? 'Aucun résultat pour votre recherche' : 'Commencez par attribuer un tour'
+            }}
+          </p>
+        </div>
+
+        <div *ngIf="!chargement && toursFiltres.length > 0" class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th width="100">Période</th>
+                <th>Bénéficiaire</th>
+                <th>Montant reçu</th>
+                <th>Date de réception</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tour of toursFiltres">
+                <td>
+                  <span class="badge" [ngClass]="'bg-' + getCouleurPeriode(tour.periode)">
+                    Période {{ tour.periode }}
+                  </span>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-3">
+                      <span class="initials">{{ tour.id_utilisateur }}</span>
+                    </div>
+                    <div>
+                      <strong>Membre #{{ tour.id_utilisateur }}</strong>
+                      <div class="text-muted small">
+                        Position #{{ getPositionMembre(tour.id_utilisateur) }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="fw-bold text-success">{{ tour.montant_recu | number }} FCFA</span>
+                </td>
+                <td>
+                  {{ tour.date_reception | date: 'dd/MM/yyyy' }}
+                  <div class="text-muted small">
+                    {{ tour.date_reception | date: 'HH:mm' }}
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-dark">#{{ getPositionMembre(tour.id_utilisateur) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0"><i class="bi bi-plus-circle me-2"></i>Attribuer un tour</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="id_utilisateur" class="form-label">Bénéficiaire</label>
+          <select class="form-select" id="id_utilisateur" [(ngModel)]="nouveauTour.id_utilisateur">
+            <option value="">Sélectionner un membre</option>
+            <option *ngFor="let membre of getMembresDisponibles()" [value]="membre.id_utilisateur">
+              Membre #{{ membre.id_utilisateur }} (Position #{{ membre.position }})
+            </option>
+          </select>
+          <div class="form-text">Sélectionnez le membre qui recevra le tour</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="periode" class="form-label">Période</label>
+          <select class="form-select" id="periode" [(ngModel)]="nouveauTour.periode">
+            <option *ngFor="let periode of getPeriodesDisponibles()" [value]="periode">
+              Période {{ periode }}
+            </option>
+          </select>
+          <div class="form-text">Période de distribution</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="montant_recu" class="form-label">Montant à distribuer</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              id="montant_recu"
+              [(ngModel)]="nouveauTour.montant_recu"
+              min="0"
+            />
+            <span class="input-group-text">FCFA</span>
+          </div>
+          <div class="form-text">Montant total à distribuer au bénéficiaire</div>
+        </div>
+
+        <button class="btn btn-success w-100" (click)="attribuerTour()">
+          <i class="bi bi-check-circle me-2"></i>Attribuer le tour
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-trophy me-2"></i>Classement des bénéficiaires
+        </h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="getToursParMembre().length === 0" class="text-center py-3">
+          <p class="text-muted mb-0">Aucun bénéficiaire</p>
+        </div>
+
+        <div *ngFor="let item of getToursParMembre(); let i = index" class="mb-3">
+          <div class="d-flex align-items-center">
+            <div class="rank-circle me-3" [ngClass]="'rank-' + (i + 1)">
+              {{ i + 1 }}
+            </div>
+            <div class="flex-grow-1">
+              <div class="fw-bold">Membre #{{ item.id_utilisateur }}</div>
+              <div class="text-muted small">
+                {{ item.tours }} tour{{ item.tours !== 1 ? 's' : '' }} •
+                {{ item.montant | number }} FCFA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div *ngIf="getProchainMembre()" class="alert alert-info">
+            <i class="bi bi-lightning me-2"></i>
+            <strong>Prochain bénéficiaire suggéré :</strong>
+            <div class="fw-bold mt-1">
+              Membre #{{ getProchainMembre()!.id_utilisateur }} (Position #{{
+                getProchainMembre()!.position
+              }})
+            </div>
+          </div>
+          <div *ngIf="!getProchainMembre() && membres.length > 0" class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong>Tous les membres ont reçu au moins un tour</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

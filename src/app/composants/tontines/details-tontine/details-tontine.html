@@ -1,0 +1,422 @@
+<div *ngIf="chargement" class="text-center my-5 py-5">
+  <div class="spinner-border text-primary" style="width: 3rem; height: 3rem"></div>
+  <p class="mt-3">Chargement des détails de la tontine...</p>
+</div>
+
+<div *ngIf="!chargement && tontine">
+  <!-- En-tête -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="/tontines" class="text-decoration-none">
+              <i class="bi bi-cash-stack"></i> Tontines
+            </a>
+          </li>
+          <li class="breadcrumb-item active">{{ tontine.nom }}</li>
+        </ol>
+      </nav>
+      <div class="d-flex align-items-center">
+        <h2 class="mb-0 me-3">{{ tontine.nom }}</h2>
+        <span class="badge" [ngClass]="'bg-' + getCouleurStatut(getStatutTontine())">
+          {{ getStatutTontine() }}
+        </span>
+      </div>
+      <p *ngIf="tontine.description" class="text-muted mb-0 mt-2">
+        {{ tontine.description }}
+      </p>
+    </div>
+    <div class="col-md-4 text-end">
+      <div class="btn-group">
+        <button class="btn btn-outline-primary" [routerLink]="['/tontines', tontine.id, 'membres']">
+          <i class="bi bi-people me-2"></i>Membres
+        </button>
+        <button
+          class="btn btn-outline-success"
+          [routerLink]="['/tontines', tontine.id, 'paiements']"
+        >
+          <i class="bi bi-cash-coin me-2"></i>Paiements
+        </button>
+        <button class="btn btn-outline-info" [routerLink]="['/tontines', tontine.id, 'tours']">
+          <i class="bi bi-arrow-repeat me-2"></i>Tours
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-md-2 mb-3">
+              <div class="text-primary h3 fw-bold">{{ tontine.montant_cotisation | number }}</div>
+              <small class="text-muted">Cotisation (FCFA)</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <div class="text-success h3 fw-bold">{{ tontine.nombre_max_membres }}</div>
+              <small class="text-muted">Membres max</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <div class="text-info h3 fw-bold">
+                <i [class]="getIconeFrequence(tontine.frequence)"></i>
+              </div>
+              <small class="text-muted">{{ tontine.frequence }}</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <div class="text-warning h3 fw-bold">{{ tontine.mode_rotation }}</div>
+              <small class="text-muted">Rotation</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <div class="text-secondary h3 fw-bold">{{ getMembreActuel() }}</div>
+              <small class="text-muted">Membre actuel</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <div class="text-dark h3 fw-bold">{{ getProchainMembre() }}</div>
+              <small class="text-muted">Prochain</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onglets -->
+  <div class="card mb-4">
+    <div class="card-header bg-white border-0">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="ongletActif === 'informations'"
+            (click)="changerOnglet('informations')"
+          >
+            <i class="bi bi-info-circle me-2"></i>Informations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="ongletActif === 'statistiques'"
+            (click)="changerOnglet('statistiques')"
+          >
+            <i class="bi bi-bar-chart me-2"></i>Statistiques
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="ongletActif === 'activite'"
+            (click)="changerOnglet('activite')"
+          >
+            <i class="bi bi-clock-history me-2"></i>Activité récente
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <!-- Onglet Informations -->
+      <div *ngIf="ongletActif === 'informations'">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="mb-3">Détails de la tontine</h5>
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td width="40%"><strong>Nom :</strong></td>
+                  <td>{{ tontine.nom }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Description :</strong></td>
+                  <td>{{ tontine.description || 'Aucune description' }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Date de démarrage :</strong></td>
+                  <td>{{ tontine.date_demarrage | date: 'dd/MM/yyyy' }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Date de création :</strong></td>
+                  <td>{{ tontine.date_creation | date: 'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="mb-3">Configuration</h5>
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td width="40%"><strong>Montant cotisation :</strong></td>
+                  <td>{{ tontine.montant_cotisation | number }} FCFA</td>
+                </tr>
+                <tr>
+                  <td><strong>Fréquence :</strong></td>
+                  <td>{{ tontine.frequence }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Mode rotation :</strong></td>
+                  <td>{{ tontine.mode_rotation }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Nombre max membres :</strong></td>
+                  <td>{{ tontine.nombre_max_membres }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Prochaine cotisation :</strong></td>
+                  <td>{{ calculerProchaineCotisation() | date: 'dd/MM/yyyy' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <h5>Actions rapides</h5>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <button class="btn btn-primary w-100">
+                <i class="bi bi-cash-coin me-2"></i>Nouveau paiement
+              </button>
+            </div>
+            <div class="col-md-3 mb-3">
+              <button class="btn btn-success w-100">
+                <i class="bi bi-person-plus me-2"></i>Ajouter membre
+              </button>
+            </div>
+            <div class="col-md-3 mb-3">
+              <button class="btn btn-info w-100">
+                <i class="bi bi-arrow-repeat me-2"></i>Attribuer tour
+              </button>
+            </div>
+            <div class="col-md-3 mb-3">
+              <button class="btn btn-warning w-100">
+                <i class="bi bi-pencil me-2"></i>Modifier
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Statistiques -->
+      <div *ngIf="ongletActif === 'statistiques'" class="row">
+        <div class="col-md-8">
+          <h5 class="mb-3">Statistiques financières</h5>
+          <div *ngIf="statistiques" class="row text-center">
+            <div class="col-md-4 mb-4">
+              <div class="card border-primary">
+                <div class="card-body">
+                  <div class="display-6 text-primary fw-bold">
+                    {{ statistiques.total_cotisations | number: '1.0-0' }}
+                  </div>
+                  <div class="text-muted">Total cotisations</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="card border-success">
+                <div class="card-body">
+                  <div class="display-6 text-success fw-bold">
+                    {{ statistiques.total_distribue | number: '1.0-0' }}
+                  </div>
+                  <div class="text-muted">Total distribué</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="card border-warning">
+                <div class="card-body">
+                  <div class="display-6 text-warning fw-bold">
+                    {{ statistiques.solde_restant | number: '1.0-0' }}
+                  </div>
+                  <div class="text-muted">Solde restant</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="statistiques" class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Membres et tours</h6>
+                </div>
+                <div class="card-body">
+                  <table class="table table-borderless">
+                    <tr>
+                      <td>Membres actifs :</td>
+                      <td class="text-end fw-bold">{{ statistiques.membres_actifs }}</td>
+                    </tr>
+                    <tr>
+                      <td>Tours réalisés :</td>
+                      <td class="text-end fw-bold">{{ statistiques.tours_realises }}</td>
+                    </tr>
+                    <tr>
+                      <td>Cotisation moyenne :</td>
+                      <td class="text-end fw-bold">
+                        {{ tontine.montant_cotisation | number }} FCFA
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total théorique :</td>
+                      <td class="text-end fw-bold">
+                        {{ tontine.montant_cotisation * tontine.nombre_max_membres | number }} FCFA
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Progression</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Cotisations collectées</span>
+                      <span>
+                        {{ statistiques.membres_actifs }}/{{ tontine.nombre_max_membres }}
+                      </span>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar bg-success"
+                        [style.width]="
+                          (statistiques.membres_actifs / tontine.nombre_max_membres) * 100 + '%'
+                        "
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Tours réalisés</span>
+                      <span
+                        >{{ statistiques.tours_realises }}/{{ tontine.nombre_max_membres }}</span
+                      >
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar bg-info"
+                        [style.width]="
+                          (statistiques.tours_realises / tontine.nombre_max_membres) * 100 + '%'
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <h5 class="mb-3">Résumé</h5>
+          <div class="card">
+            <div class="card-body">
+              <p><strong>Statut :</strong> {{ getStatutTontine() }}</p>
+              <p>
+                <strong>Prochaine échéance :</strong>
+                {{ calculerProchaineCotisation() | date: 'dd/MM/yyyy' }}
+              </p>
+              <p><strong>Membre actuel :</strong> {{ getMembreActuel() }}</p>
+              <p><strong>Prochain membre :</strong> {{ getProchainMembre() }}</p>
+              <hr />
+              <p class="small text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                Ces statistiques sont mises à jour en temps réel
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Activité -->
+      <div *ngIf="ongletActif === 'activite'">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="mb-3">Derniers paiements</h5>
+            <div *ngIf="derniersPaiements.length > 0">
+              <div class="list-group">
+                <div *ngFor="let paiement of derniersPaiements" class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="fw-bold">Membre #{{ paiement.id_utilisateur }}</div>
+                      <small class="text-muted">{{
+                        paiement.date_versement | date: 'dd/MM/yyyy HH:mm'
+                      }}</small>
+                    </div>
+                    <div class="text-success fw-bold">{{ paiement.montant | number }} FCFA</div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <a
+                  [routerLink]="['/tontines', tontine.id, 'paiements']"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  Voir tous les paiements
+                </a>
+              </div>
+            </div>
+            <div *ngIf="derniersPaiements.length === 0" class="text-center py-4">
+              <i class="bi bi-cash-coin display-4 text-muted mb-3"></i>
+              <p class="text-muted">Aucun paiement enregistré</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="mb-3">Derniers tours</h5>
+            <div *ngIf="derniersTours.length > 0">
+              <div class="list-group">
+                <div *ngFor="let tour of derniersTours" class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="fw-bold">Membre #{{ tour.id_utilisateur }}</div>
+                      <small class="text-muted">{{
+                        tour.date_reception | date: 'dd/MM/yyyy HH:mm'
+                      }}</small>
+                    </div>
+                    <div>
+                      <span class="badge bg-info me-2">Période {{ tour.periode }}</span>
+                      <span class="text-success fw-bold"
+                        >{{ tour.montant_recu | number }} FCFA</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <a
+                  [routerLink]="['/tontines', tontine.id, 'tours']"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  Voir tous les tours
+                </a>
+              </div>
+            </div>
+            <div *ngIf="derniersTours.length === 0" class="text-center py-4">
+              <i class="bi bi-arrow-repeat display-4 text-muted mb-3"></i>
+              <p class="text-muted">Aucun tour attribué</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!chargement && !tontine" class="text-center py-5">
+  <i class="bi bi-exclamation-triangle display-1 text-danger mb-3"></i>
+  <h4 class="text-danger">Tontine non trouvée</h4>
+  <p class="text-muted">La tontine demandée n'existe pas ou a été supprimée</p>
+  <a routerLink="/tontines" class="btn btn-primary mt-3">
+    <i class="bi bi-arrow-left me-2"></i>Retour aux tontines
+  </a>
+</div>

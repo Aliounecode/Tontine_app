@@ -1,0 +1,134 @@
+/* Liste Tours Styles */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.initials {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.rank-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.rank-1 {
+  background-color: #ffd700; /* Or */
+}
+
+.rank-2 {
+  background-color: #c0c0c0; /* Argent */
+}
+
+.rank-3 {
+  background-color: #cd7f32; /* Bronze */
+}
+
+.rank-4,
+.rank-5,
+.rank-6,
+.rank-7,
+.rank-8,
+.rank-9,
+.rank-10 {
+  background-color: #6c757d; /* Gris */
+}
+
+.badge {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5em 0.8em;
+}
+
+.card {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card.border-primary {
+  border-color: #007bff !important;
+}
+
+.card.border-success {
+  border-color: #198754 !important;
+}
+
+.card.border-info {
+  border-color: #0dcaf0 !important;
+}
+
+.display-6 {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-top: none;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.form-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.btn-group .btn {
+  border-radius: 6px;
+}
+
+.alert {
+  border-radius: 8px;
+}
+
+.alert-info {
+  background-color: #cff4fc;
+  border-color: #b6effb;
+  color: #055160;
+}
+
+.alert-success {
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+  color: #0f5132;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .display-6 {
+    font-size: 1.8rem;
+  }
+
+  .card-header .row {
+    flex-direction: column;
+  }
+
+  .card-header .col-md-6 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .rank-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.875rem;
+  }
+}
