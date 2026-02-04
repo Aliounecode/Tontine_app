@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- 1. Import nécessaire
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -8,26 +8,29 @@ import { Utilisateur } from '../../../models/modeles';
 @Component({
   selector: 'app-liste-utilisateurs',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule], // Importer FormsModule pour ngModel
   templateUrl: './liste-utilisateurs.html',
   styleUrls: ['./liste-utilisateurs.css'],
 })
 export class ListeUtilisateurs implements OnInit {
+  // Propriétés pour la gestion des utilisateurs
   utilisateurs: Utilisateur[] = [];
   chargement = true;
   recherche = '';
   page = 1;
   itemsParPage = 10;
 
+  // Injecter HttpClient et ChangeDetectorRef
   constructor(
     private http: HttpClient,
-    private cdr: ChangeDetectorRef, // <--- 2. Injection du détecteur
+    private cdr: ChangeDetectorRef,
   ) {}
-
+  // Charger les utilisateurs au démarrage du composant
   ngOnInit() {
     this.chargerUtilisateurs();
   }
 
+  // Méthode pour charger les utilisateurs depuis l'API
   chargerUtilisateurs() {
     this.chargement = true;
     this.http.get<Utilisateur[]>('http://localhost:8000/utilisateurs/').subscribe({
@@ -47,7 +50,7 @@ export class ListeUtilisateurs implements OnInit {
       },
     });
   }
-
+  // Filtrer les utilisateurs en fonction de la recherche
   get utilisateursFiltres(): Utilisateur[] {
     if (!this.recherche) return this.utilisateurs;
 
@@ -59,12 +62,12 @@ export class ListeUtilisateurs implements OnInit {
         u.telephone.includes(this.recherche),
     );
   }
-
+  // Obtenir les utilisateurs pour la page actuelle
   get utilisateursPagines(): Utilisateur[] {
     const start = (this.page - 1) * this.itemsParPage;
     return this.utilisateursFiltres.slice(start, start + this.itemsParPage);
   }
-
+  // Calculer le nombre total de pages
   get nombrePages(): number {
     return Math.ceil(this.utilisateursFiltres.length / this.itemsParPage);
   }
@@ -74,7 +77,7 @@ export class ListeUtilisateurs implements OnInit {
       this.page = nouvellePage;
     }
   }
-
+  // Supprimer un utilisateur
   supprimerUtilisateur(id: number) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
       this.http.delete(`http://localhost:8000/utilisateurs/${id}`).subscribe({
@@ -87,7 +90,7 @@ export class ListeUtilisateurs implements OnInit {
       });
     }
   }
-
+  // Obtenir l'indice de début et de fin pour l'affichage
   getIndiceDebut(): number {
     return (this.page - 1) * this.itemsParPage + 1;
   }

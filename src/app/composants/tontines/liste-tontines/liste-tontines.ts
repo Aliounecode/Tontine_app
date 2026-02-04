@@ -22,7 +22,7 @@ export class ListeTontines implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private cdr: ChangeDetectorRef, // <--- 2. Injection indispensable
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -32,7 +32,6 @@ export class ListeTontines implements OnInit {
   chargerTontines() {
     this.chargement = true;
 
-    // <--- 3. URL CORRIGÉE (Pas de slash à la fin !)
     this.http.get<Tontine[]>('http://localhost:8000/tontines').subscribe({
       next: (data) => {
         this.tontines = data;

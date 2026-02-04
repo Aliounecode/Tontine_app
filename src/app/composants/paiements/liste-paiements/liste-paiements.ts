@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- 1. Import
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./liste-paiements.css'],
 })
 export class ListePaiements implements OnInit {
+  // Propriétés de la classe ListePaiements
   paiements: Paiement[] = [];
   tontineId: number | null = null;
   tontineNom: string = '';
@@ -30,7 +31,7 @@ export class ListePaiements implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef, // <--- 2. Injection du détecteur
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -110,14 +111,14 @@ export class ListePaiements implements OnInit {
       (a, b) => new Date(b.date_versement).getTime() - new Date(a.date_versement).getTime(),
     );
   }
-
+  // Méthode pour calculer les statistiques des paiements
   calculerStatistiques() {
     this.totalPaiements = this.paiements.reduce((sum, p) => sum + p.montant, 0);
     this.nombrePaiements = this.paiements.length;
     this.moyennePaiement =
       this.nombrePaiements > 0 ? this.totalPaiements / this.nombrePaiements : 0;
   }
-
+  // Méthode pour enregistrer un nouveau paiement
   effectuerPaiement() {
     if (!this.tontineId || this.nouveauPaiement.montant <= 0) {
       alert('Montant invalide');
@@ -130,7 +131,6 @@ export class ListePaiements implements OnInit {
       periode: this.nouveauPaiement.periode,
     };
 
-    // <--- 4. URL CORRIGÉE (PAS DE SLASH A LA FIN)
     this.http.post('http://localhost:8000/paiements', paiement).subscribe({
       next: () => {
         alert('Paiement enregistré avec succès !');

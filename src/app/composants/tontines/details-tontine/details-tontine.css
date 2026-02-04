@@ -1,121 +1,58 @@
-/* Details Tontine Styles */
-.breadcrumb {
-  background-color: transparent;
-  padding: 0;
-  margin-bottom: 1rem;
+/* --- Banner --- */
+.decorative-circle {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  z-index: 1;
 }
 
-.breadcrumb-item a {
-  color: #6c757d;
-  text-decoration: none;
-  transition: color 0.2s;
+/* --- Stats Cards --- */
+.stat-card {
+  transition: transform 0.2s;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
 }
 
-.breadcrumb-item a:hover {
-  color: #007bff;
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
 }
 
-.badge {
-  font-size: 0.875rem;
-  padding: 0.35em 0.65em;
-  font-weight: 500;
+/* --- Nav Modern --- */
+.nav-modern .nav-link {
+  color: #6b7280;
+  font-weight: 600;
+  border-radius: 0;
+  border-bottom: 3px solid transparent;
+  padding: 1rem 0;
+}
+.nav-modern .nav-link:hover {
+  color: #4f46e5;
+}
+.nav-modern .nav-link.active {
+  color: #4f46e5;
+  background: transparent;
+  border-bottom-color: #4f46e5;
 }
 
-.card {
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.nav-tabs {
-  border-bottom: 1px solid #dee2e6;
-}
-
-.nav-tabs .nav-link {
-  border: none;
-  color: #6c757d;
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.2s;
-}
-
-.nav-tabs .nav-link:hover {
-  color: #007bff;
-  border-bottom: 2px solid #007bff;
-}
-
-.nav-tabs .nav-link.active {
-  color: #007bff;
-  border-bottom: 2px solid #007bff;
-  background-color: transparent;
-}
-
-.table-borderless td {
-  padding: 0.5rem 0;
-}
-
-.btn-group .btn {
-  border-radius: 6px;
-}
-
-.btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
-}
-
-.btn-outline-primary:hover {
-  background-color: #007bff;
-  color: white;
-}
-
-.progress {
-  border-radius: 4px;
-  background-color: #e9ecef;
-}
-
-.progress-bar {
-  border-radius: 4px;
-  transition: width 0.6s ease;
-}
-
-.list-group-item {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  margin-bottom: 8px;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.list-group-item:hover {
-  background-color: rgba(0, 123, 255, 0.05);
-  border-color: #007bff;
-}
-
-.display-6 {
-  font-size: 2rem;
-  font-weight: 300;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .btn-group {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .btn-group .btn {
-    flex: 1;
-  }
-
-  .nav-tabs .nav-link {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .display-6 {
-    font-size: 1.5rem;
-  }
+/* --- Timeline --- */
+.timeline-dot {
+  position: absolute;
+  left: -9px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 1px #e5e7eb;
 }

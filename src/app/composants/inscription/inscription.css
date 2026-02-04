@@ -1,0 +1,74 @@
+.card {
+  border-radius: 15px;
+  border: none;
+  overflow: hidden;
+}
+
+.card-header {
+  border-radius: 15px 15px 0 0 !important;
+  padding: 1.5rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+}
+
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+}
+
+.btn-success:hover {
+  background-color: #146c43;
+  border-color: #146c43;
+}
+
+.btn-outline-secondary {
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-outline-warning {
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-outline-info {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .d-flex {
+    flex-direction: column;
+  }
+
+  .d-flex > * {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -13,6 +13,7 @@ import { Membre } from '../../../models/modeles';
   styleUrls: ['./liste-membres.css'],
 })
 export class ListeMembres implements OnInit {
+  // Propriétés de ListeMembres
   membres: Membre[] = [];
   tontineId: number | null = null;
   tontineNom: string = '';
@@ -31,6 +32,7 @@ export class ListeMembres implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
+      // Recuperer l'ID de la tontine depuis les parametres de l'URL
       this.tontineId = +params['id']; // Le '+' assure que c'est bien un nombre
       this.chargerMembres();
       this.chargerDetailsTontine();
@@ -71,9 +73,9 @@ export class ListeMembres implements OnInit {
       },
     });
   }
-
+  // Filtrer les membres selon la recherche
   get membresFiltres(): Membre[] {
-    if (!this.recherche) return this.membres;
+    if (!this.recherche) return this.membres; // Si pas de recherche, retourner tous les membres
 
     const searchLower = this.recherche.toLowerCase();
     return this.membres.filter((m) => m.id_utilisateur.toString().includes(this.recherche));
@@ -92,7 +94,6 @@ export class ListeMembres implements OnInit {
       date_adhesion: new Date().toISOString().split('T')[0],
     };
 
-    // <--- 5. CORRECTION URL (SUPPRESSION DU SLASH FINAL)
     this.http.post('http://localhost:8000/membres', nouveauMembre).subscribe({
       next: () => {
         alert('Membre ajouté avec succès !');
@@ -112,9 +113,15 @@ export class ListeMembres implements OnInit {
 
   retirerMembre(membreId: number) {
     if (confirm('Êtes-vous sûr de vouloir retirer ce membre ?')) {
-      // TODO: Implémenter la suppression réelle
-      alert(`Membre ${membreId} retiré (fonctionnalité à implémenter)`);
-      this.chargerMembres();
+      this.http.delete(`http://localhost:8000/membres/${membreId}`).subscribe({
+        next: () => {
+          alert('Membre retiré avec succès !');
+          this.chargerMembres();
+        },
+        error: (error) => {
+          alert(error.error?.detail || 'Erreur lors du retrait du membre');
+        },
+      });
     }
   }
 
@@ -139,15 +146,16 @@ export class ListeMembres implements OnInit {
   }
 
   calculerNombreMembres(): number {
+    // Retourne le nombre total de membres
     return this.membres.length;
   }
 
   getMembreParPosition(position: number): Membre | undefined {
-    return this.membres.find((m) => m.position === position);
+    return this.membres.find((m) => m.position === position); // Retourne le membre à la position donnée
   }
 
   getPositionDisponible(): number {
-    const positions = this.membres.map((m) => m.position).sort((a, b) => a - b);
+    const positions = this.membres.map((m) => m.position).sort((a, b) => a - b); // Trier les positions existantes
     let position = 1;
 
     for (const pos of positions) {
@@ -167,11 +175,20 @@ export class ListeMembres implements OnInit {
       return;
     }
 
-    // TODO: Implémenter la réorganisation
-    alert(`Membre ${membreId} déplacé à la position ${nouvellePosition}`);
+    this.http
+      .patch(`http://localhost:8000/membres/${membreId}`, { position: nouvellePosition })
+      .subscribe({
+        next: () => {
+          alert(`Membre ${membreId} déplacé à la position ${nouvellePosition}`);
+          this.chargerMembres(); // Recharger les membres après modification
+        },
+        error: (error) => {
+          alert(error.error?.detail || 'Erreur lors du déplacement du membre');
+        },
+      });
   }
 
   genererOrdrePassage(): Membre[] {
-    return [...this.membres].sort((a, b) => a.position - b.position);
+    return [...this.membres].sort((a, b) => a.position - b.position); // Retourne une nouvelle liste triée par position
   }
 }

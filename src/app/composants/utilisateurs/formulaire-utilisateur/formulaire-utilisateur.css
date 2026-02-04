@@ -1,25 +1,130 @@
-.card {
-  border-radius: 10px;
+/* --- Variables (Cohérent avec la liste) --- */
+:host {
+  --primary-color: #4f46e5;
+  --primary-focus: rgba(79, 70, 229, 0.25);
+  --bg-input: #f9fafb;
+  --text-label: #374151;
+  --border-radius: 12px;
 }
 
-.breadcrumb {
-  background-color: transparent;
-  padding: 0;
+.page-container {
+  background-color: #f3f4f6; /* Fond de page gris doux */
+  min-height: 100vh;
 }
 
+/* --- Card Styles --- */
+.form-card {
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+/* Bandeau coloré en haut de la carte */
+.card-header-accent {
+  height: 6px;
+  background: linear-gradient(to right, var(--primary-color), #8b5cf6);
+  width: 100%;
+}
+
+.ls-1 {
+  letter-spacing: 1px;
+}
+.border-dashed {
+  border-style: dashed !important;
+}
+
+/* --- Labels --- */
 .form-label {
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-label);
+  margin-bottom: 0.5rem;
 }
 
-.input-group-text {
-  background-color: #f8f9fa;
+/* --- Custom Input Groups (La clé du design) --- */
+.input-group-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-input);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
 }
 
-.btn-outline-info {
-  font-size: 0.875rem;
-  padding: 0.125rem 0.5rem;
+/* État Focus : Bordure colorée + Ombre portée */
+.input-group-custom:focus-within {
+  background-color: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-focus);
 }
 
-.alert {
-  border-radius: 8px;
+.form-control,
+.form-select {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #111827;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: transparent;
+  box-shadow: none; /* On gère l'ombre sur le parent */
+  border: none;
+}
+
+/* Icônes à l'intérieur des inputs */
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Bouton Oeil (Password) */
+.btn-eye {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.btn-eye:hover {
+  color: var(--primary-color);
+}
+
+/* --- Bouton Principal (Glow Effect) --- */
+.btn-glow {
+  background: var(--primary-color);
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.btn-glow:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.23);
+  background-color: #4338ca;
+}
+
+.btn-glow:disabled {
+  background-color: #a5a6f6;
+  box-shadow: none;
+}
+
+/* --- Select Styling --- */
+.select-wrapper {
+  background-color: var(--bg-input);
+  border-radius: var(--border-radius);
+}
+.select-wrapper:focus-within {
+  box-shadow: 0 0 0 4px var(--primary-focus);
+  background-color: white;
 }

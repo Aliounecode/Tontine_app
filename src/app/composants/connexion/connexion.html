@@ -1,0 +1,96 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h3 class="mb-0"><i class="bi bi-lock me-2"></i>Connexion</h3>
+        </div>
+
+        <div class="card-body">
+          <form (ngSubmit)="seConnecter()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="telephone" class="form-label">
+                <i class="bi bi-telephone me-1"></i>Téléphone
+              </label>
+              <input
+                type="tel"
+                class="form-control"
+                id="telephone"
+                [(ngModel)]="loginData.telephone"
+                name="telephone"
+                required
+                placeholder="77 123 45 67"
+              />
+              <div class="form-text">Entrez votre numéro de téléphone</div>
+            </div>
+
+            <div class="mb-4">
+              <label for="mot_de_passe" class="form-label">
+                <i class="bi bi-key me-1"></i>Mot de passe
+              </label>
+              <div class="input-group">
+                <input
+                  [type]="passwordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="mot_de_passe"
+                  [(ngModel)]="loginData.mot_de_passe"
+                  name="mot_de_passe"
+                  required
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="basculerPasswordVisibility()"
+                >
+                  <i [class]="passwordVisible ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="erreur" class="alert alert-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              {{ erreur }}
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="chargement">
+                <span *ngIf="chargement" class="spinner-border spinner-border-sm me-2"></span>
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Se connecter
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="demarrerInscription()"
+              >
+                <i class="bi bi-person-plus me-2"></i>
+                Créer un compte
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-4 text-center">
+            <div class="alert alert-info">
+              <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Rôles disponibles</h6>
+              <div class="row">
+                <div class="col-4">
+                  <small class="d-block">Admin</small>
+                  <small class="text-muted">Gestion complète</small>
+                </div>
+                <div class="col-4">
+                  <small class="d-block">Trésorier</small>
+                  <small class="text-muted">Gère les tontines</small>
+                </div>
+                <div class="col-4">
+                  <small class="d-block">Membre</small>
+                  <small class="text-muted">Participe aux tontines</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

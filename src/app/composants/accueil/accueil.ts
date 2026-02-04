@@ -12,35 +12,37 @@ import { StatistiquesTontine } from '../../models/modeles';
   styleUrls: ['./accueil.css'],
 })
 export class Accueil implements OnInit {
+  // Données simulées pour l'affichage
   statistiques: StatistiquesTontine | null = null;
   derniereTontine: any = null;
   prochainPaiement: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {} // Injection du HttpClient pour les futures requêtes HTTP
 
   ngOnInit() {
+    // Initialisation des données
     this.chargerDonnees();
   }
 
   chargerDonnees() {
     // Simulation de données pour l'accueil
     this.statistiques = {
-      total_cotisations: 1500000,
-      total_distribue: 1200000,
-      solde_restant: 300000,
-      membres_actifs: 45,
-      tours_realises: 120,
+      total_cotisations: 0,
+      total_distribue: 0,
+      solde_restant: 0,
+      membres_actifs: 0,
+      tours_realises: 0,
     };
 
     this.derniereTontine = {
-      nom: 'Tontine des Amis',
-      montant: 50000,
-      frequence: 'mensuel',
+      nom: 'Neant',
+      montant: 0,
+      frequence: 'Neant',
     };
 
     this.prochainPaiement = {
       date: '2024-01-25',
-      montant: 10000,
+      montant: 0,
     };
   }
 

@@ -1,3 +1,8 @@
+//Pourquoi ce fichier existe-t-il ?
+//Ce fichier définit les interfaces TypeScript pour les modèles de données utilisés dans l'application Tontine.
+//Il permet de structurer et de typer les données manipulées dans l'application,
+// facilitant ainsi le développement et la maintenance du code.
+
 export interface Utilisateur {
   id: number;
   nom_utilisateur: string;
@@ -52,4 +57,15 @@ export interface StatistiquesTontine {
   solde_restant: number;
   membres_actifs: number;
   tours_realises: number;
+}
+
+export interface Token {
+  access_token: string;
+  token_type: string;
+  utilisateur: Utilisateur;
+}
+
+export interface LoginData {
+  telephone: string;
+  mot_de_passe: string;
 }

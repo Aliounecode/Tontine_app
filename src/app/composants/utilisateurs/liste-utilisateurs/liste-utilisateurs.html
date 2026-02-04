@@ -1,183 +1,189 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h2><i class="bi bi-people me-2"></i>Liste des Utilisateurs</h2>
-    <p class="text-muted mb-0">Gérez tous les utilisateurs du système</p>
-  </div>
-  <div>
-    <a routerLink="/utilisateurs/nouveau" class="btn btn-primary">
-      <i class="bi bi-person-plus me-2"></i>Nouvel utilisateur
+<div class="container-fluid py-4 page-container">
+  <div class="d-flex justify-content-between align-items-center mb-5 header-section">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">
+        <span class="text-gradient">Utilisateurs</span>
+      </h2>
+      <p class="text-muted mb-0">Gérez votre communauté et les permissions</p>
+    </div>
+    <a routerLink="/utilisateurs/nouveau" class="btn btn-primary btn-glow">
+      <i class="bi bi-plus-lg me-2"></i>Nouveau membre
     </a>
   </div>
-</div>
 
-<div class="card mb-4">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="input-group">
-          <span class="input-group-text">
+  <div class="search-bar-container mb-5">
+    <div class="row g-3 align-items-center bg-white p-3 rounded-4 shadow-sm search-card">
+      <div class="col-md-5">
+        <div class="input-group input-group-flush border-end pe-3">
+          <span class="input-group-text bg-transparent border-0 text-primary">
             <i class="bi bi-search"></i>
           </span>
           <input
             type="text"
-            class="form-control"
+            class="form-control border-0 bg-transparent"
             [(ngModel)]="recherche"
-            placeholder="Rechercher un utilisateur..."
+            placeholder="Rechercher par nom, email..."
           />
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="d-flex justify-content-end align-items-center">
-          <span class="me-2 text-muted">Afficher</span>
-          <select class="form-select w-auto" [(ngModel)]="itemsParPage">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-          </select>
-          <span class="ms-2 text-muted">utilisateurs par page</span>
+      <div class="col-md-4">
+        <div class="d-flex align-items-center text-muted small">
+          <i class="bi bi-funnel me-2"></i> Filtres rapides
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="chargement" class="text-center my-5">
-  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
-    <span class="visually-hidden">Chargement...</span>
-  </div>
-  <p class="mt-3">Chargement des utilisateurs...</p>
-</div>
-
-<div *ngIf="!chargement" class="table-responsive">
-  <table class="table table-hover align-middle">
-    <thead class="table-light">
-      <tr>
-        <th width="80">ID</th>
-        <th>Utilisateur</th>
-        <th>Contact</th>
-        <th>Rôle</th>
-        <th>Inscription</th>
-        <th width="150">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
-      <tr *ngFor="let utilisateur of utilisateursPagines">
-        <td>
-          <span class="badge bg-secondary">#{{ utilisateur.id }}</span>
-        </td>
-        <td>
-          <div class="d-flex align-items-center">
-            <div class="avatar-circle me-3">
-              <span class="initials">{{ utilisateur.nom_utilisateur.charAt(0) }}</span>
-            </div>
-            <div>
-              <strong>{{ utilisateur.nom_utilisateur }}</strong>
-              <div class="text-muted small">Utilisateur</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div><i class="bi bi-telephone me-2"></i>{{ utilisateur.telephone }}</div>
-          <div class="text-muted small">
-            <i class="bi bi-envelope me-2"></i>{{ utilisateur.email }}
-          </div>
-        </td>
-        <td>
-          <span
-            class="badge"
-            [ngClass]="{
-              'bg-primary': utilisateur.role === 'membre',
-              'bg-success': utilisateur.role === 'trésorier',
-              'bg-danger': utilisateur.role === 'admin',
-            }"
-          >
-            <i
-              class="bi me-1"
-              [ngClass]="{
-                'bi-person': utilisateur.role === 'membre',
-                'bi-cash-coin': utilisateur.role === 'trésorier',
-                'bi-shield': utilisateur.role === 'admin',
-              }"
-            ></i>
-            {{ utilisateur.role }}
-          </span>
-        </td>
-        <td>
-          {{ utilisateur.date_creation | date: 'dd/MM/yyyy' }}
-          <div class="text-muted small">
-            {{ utilisateur.date_creation | date: 'HH:mm' }}
-          </div>
-        </td>
-        <td>
-          <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-outline-primary" title="Voir">
-              <i class="bi bi-eye"></i>
-            </button>
-            <button class="btn btn-outline-success" title="Modifier">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-outline-danger"
-              title="Supprimer"
-              (click)="supprimerUtilisateur(utilisateur.id)"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
-<div *ngIf="!chargement && utilisateursPagines.length === 0" class="text-center py-5">
-  <i class="bi bi-people display-1 text-muted mb-3"></i>
-  <h4 class="text-muted">Aucun utilisateur trouvé</h4>
-  <p class="text-muted">Commencez par ajouter votre premier utilisateur</p>
-  <a routerLink="/utilisateurs/nouveau" class="btn btn-primary mt-2">
-    <i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur
-  </a>
-</div>
-
-<!-- REMPLACER utilisateursPaginés par utilisateursPagines -->
-<div *ngIf="!chargement && utilisateursPagines.length > 0" class="card mt-4">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <span class="text-muted">
-          <!-- UTILISER les méthodes au lieu de Math directement -->
-          Affichage de {{ getIndiceDebut() }} à {{ getIndiceFin() }} sur
-          {{ utilisateursFiltres.length }} utilisateurs
-        </span>
+      <div class="col-md-3 text-end">
+        <select class="form-select border-0 bg-light rounded-pill ps-3" [(ngModel)]="itemsParPage">
+          <option value="5">Afficher 5</option>
+          <option value="10">Afficher 10</option>
+          <option value="25">Afficher 25</option>
+        </select>
       </div>
-      <nav>
-        <ul class="pagination mb-0">
-          <li class="page-item" [class.disabled]="page === 1">
-            <button class="page-link" (click)="changerPage(page - 1)">
-              <i class="bi bi-chevron-left"></i>
-            </button>
-          </li>
-
-          <li
-            *ngFor="let p of [].constructor(nombrePages); let i = index"
-            class="page-item"
-            [class.active]="page === i + 1"
-          >
-            <button class="page-link" (click)="changerPage(i + 1)">
-              {{ i + 1 }}
-            </button>
-          </li>
-
-          <li class="page-item" [class.disabled]="page === nombrePages">
-            <button class="page-link" (click)="changerPage(page + 1)">
-              <i class="bi bi-chevron-right"></i>
-            </button>
-          </li>
-        </ul>
-      </nav>
     </div>
+  </div>
+
+  <div *ngIf="chargement" class="text-center my-5 py-5 fade-in">
+    <div class="spinner-grow text-primary mb-3" role="status"></div>
+    <p class="text-muted ls-1">Synchronisation des données...</p>
+  </div>
+
+  <div *ngIf="!chargement" class="table-responsive" style="overflow: visible">
+    <table class="table table-borderless custom-table align-middle">
+      <thead class="text-muted small text-uppercase ls-1">
+        <tr>
+          <th scope="col" class="ps-4">Membre</th>
+          <th scope="col">Coordonnées</th>
+          <th scope="col">Statut & Rôle</th>
+          <th scope="col">Date d'ajout</th>
+          <th scope="col" class="text-end pe-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let utilisateur of utilisateursPagines" class="table-row-card fade-in-up">
+          <td class="ps-4">
+            <div class="d-flex align-items-center py-2">
+              <div class="avatar-gradient me-3 shadow-sm">
+                {{ utilisateur.nom_utilisateur.charAt(0) | uppercase }}
+              </div>
+              <div>
+                <h6 class="mb-0 fw-bold text-dark">{{ utilisateur.nom_utilisateur }}</h6>
+                <span class="text-muted small">ID: #{{ utilisateur.id }}</span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="d-flex flex-column">
+              <span class="text-dark fw-medium mb-1">
+                <i class="bi bi-envelope-at text-primary me-2 opacity-50"></i
+                >{{ utilisateur.email }}
+              </span>
+              <span class="text-muted small">
+                <i class="bi bi-telephone me-2 opacity-50"></i>{{ utilisateur.telephone }}
+              </span>
+            </div>
+          </td>
+
+          <td>
+            <span
+              class="badge-soft"
+              [ngClass]="{
+                'badge-soft-primary': utilisateur.role === 'membre',
+                'badge-soft-success': utilisateur.role === 'trésorier',
+                'badge-soft-danger': utilisateur.role === 'admin',
+              }"
+            >
+              <i
+                class="bi me-1"
+                [ngClass]="{
+                  'bi-person': utilisateur.role === 'membre',
+                  'bi-graph-up-arrow': utilisateur.role === 'trésorier',
+                  'bi-shield-lock': utilisateur.role === 'admin',
+                }"
+              ></i>
+              {{ utilisateur.role | titlecase }}
+            </span>
+          </td>
+
+          <td>
+            <span class="text-dark fw-medium">{{
+              utilisateur.date_creation | date: 'dd MMM yyyy'
+            }}</span>
+            <br />
+            <span class="text-muted small">à {{ utilisateur.date_creation | date: 'HH:mm' }}</span>
+          </td>
+
+          <td class="text-end pe-4">
+            <div class="dropdown">
+              <button
+                class="btn btn-icon btn-light rounded-circle shadow-sm"
+                type="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 rounded-3">
+                <li><h6 class="dropdown-header text-uppercase small ls-1">Actions</h6></li>
+                <li>
+                  <a class="dropdown-item rounded-2 py-2" href="#">
+                    <i class="bi bi-pencil-square me-2 text-warning"></i>Modifier
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item rounded-2 py-2 text-danger"
+                    href="javascript:void(0)"
+                    (click)="supprimerUtilisateur(utilisateur.id)"
+                  >
+                    <i class="bi bi-trash me-2"></i>Supprimer
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!chargement && utilisateursPagines.length === 0" class="text-center py-5 empty-state">
+    <div class="mb-3">
+      <i class="bi bi-emoji-dizzy display-1 text-muted opacity-25"></i>
+    </div>
+    <h5 class="fw-bold">Aucun résultat</h5>
+    <p class="text-muted">Essayez de modifier votre recherche.</p>
+  </div>
+
+  <div
+    *ngIf="!chargement && utilisateursPagines.length > 0"
+    class="d-flex justify-content-between align-items-center mt-4 px-3"
+  >
+    <div class="text-muted small">
+      Affichage de <strong>{{ getIndiceDebut() }}</strong> à
+      <strong>{{ getIndiceFin() }}</strong> sur <strong>{{ utilisateursFiltres.length }}</strong>
+    </div>
+
+    <nav>
+      <ul class="pagination pagination-modern mb-0">
+        <li class="page-item" [class.disabled]="page === 1">
+          <button class="page-link rounded-circle me-2" (click)="changerPage(page - 1)">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+        <li
+          class="page-item"
+          *ngFor="let p of [].constructor(nombrePages); let i = index"
+          [class.active]="page === i + 1"
+        >
+          <button class="page-link rounded-circle me-2" (click)="changerPage(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="page === nombrePages">
+          <button class="page-link rounded-circle" (click)="changerPage(page + 1)">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>

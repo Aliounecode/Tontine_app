@@ -1,0 +1,25 @@
+.card {
+  border-radius: 15px;
+  border: none;
+}
+
+.card-header {
+  border-radius: 15px 15px 0 0 !important;
+}
+
+.btn-primary {
+  padding: 10px;
+  font-weight: 500;
+}
+
+.alert-info {
+  border-radius: 10px;
+}
+
+.input-group .btn {
+  border-color: #ced4da;
+}
+
+.input-group .btn:hover {
+  background-color: #f8f9fa;
+}

@@ -1,34 +1,208 @@
-.avatar-circle {
-  width: 40px;
-  height: 40px;
-  background-color: #007bff;
-  border-radius: 50%;
+/* --- Variables & General --- */
+:host {
+  --primary-color: #4f46e5; /* Un bleu-violet moderne (Indigo) */
+  --primary-light: #eef2ff;
+  --success-light: #dcfce7;
+  --success-text: #166534;
+  --danger-light: #fee2e2;
+  --danger-text: #991b1b;
+  --text-dark: #1f2937;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.page-container {
+  background-color: #f9fafb; /* Gris très léger pour le fond de page */
+  min-height: 100vh;
+}
+
+.ls-1 {
+  letter-spacing: 1px;
+}
+
+/* --- Text Gradient --- */
+.text-gradient {
+  background: linear-gradient(to right, var(--primary-color), #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Bouton Glow --- */
+.btn-glow {
+  background: var(--primary-color);
+  border: none;
+  box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+  transition: all 0.2s ease;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.btn-glow:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.23);
+  background-color: #4338ca;
+}
+
+/* --- Search Bar --- */
+.search-card {
+  transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+.search-card:focus-within {
+  box-shadow: var(--card-shadow) !important;
+  border-color: var(--primary-light);
+}
+
+/* --- Table Styles (The Banger Part) --- */
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0 15px; /* Espace entre les lignes */
+}
+
+.table-row-card {
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+}
+
+.table-row-card td {
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+  padding: 1.2rem 1rem;
+}
+
+/* Arrondir les bords de la ligne */
+.table-row-card td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  border-left: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.table-row-card td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-right: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+/* Hover Effect */
+.table-row-card:hover {
+  transform: translateY(-3px); /* La ligne se soulève */
+  box-shadow: var(--hover-shadow);
+  z-index: 10;
+  position: relative;
+}
+
+/* --- Avatar Gradient --- */
+.avatar-gradient {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px; /* Carré arrondi (Squircle) */
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.initials {
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.table th {
+/* --- Soft Badges --- */
+.badge-soft {
+  padding: 8px 12px;
+  border-radius: 30px;
   font-weight: 600;
-  color: #495057;
-  border-top: none;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
 }
 
-.table tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.05);
+.badge-soft-primary {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
 }
 
-.btn-group .btn {
-  padding: 0.25rem 0.5rem;
+.badge-soft-success {
+  background-color: var(--success-light);
+  color: var(--success-text);
 }
 
-.page-item.active .page-link {
-  background-color: #007bff;
-  border-color: #007bff;
+.badge-soft-danger {
+  background-color: var(--danger-light);
+  color: var(--danger-text);
+}
+
+/* --- Action Buttons --- */
+.btn-icon {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+.btn-icon:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+/* --- Pagination Moderne --- */
+.pagination-modern .page-link {
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  background: transparent;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+.pagination-modern .page-item.active .page-link {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.pagination-modern .page-link:hover:not(.active) {
+  background-color: #f3f4f6;
+  color: var(--primary-color);
+}
+
+/* --- Animations --- */
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Décalage de l'animation pour chaque ligne (via nth-child si possible, sinon JS) */
+.table-row-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.table-row-card:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.table-row-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.table-row-card:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.table-row-card:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

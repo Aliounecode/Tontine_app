@@ -1,247 +1,174 @@
-<div class="row justify-content-center">
-  <div class="col-lg-10">
-    <div class="card border-0 shadow-sm">
-      <div class="card-header bg-white border-0 pb-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <a routerLink="/tontines" class="text-decoration-none">
-                <i class="bi bi-cash-stack"></i> Tontines
-              </a>
-            </li>
-            <li class="breadcrumb-item active">{{ tontineId ? 'Modification' : 'Création' }}</li>
-          </ol>
-        </nav>
+<div class="container py-5 page-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">Créer votre Tontine</h2>
+        <p class="text-muted">Configurez votre cercle en 3 étapes simples</p>
 
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <h2 class="card-title mb-0">
-            <i [class]="tontineId ? 'bi bi-pencil-square me-2' : 'bi bi-plus-circle me-2'"></i>
-            {{ tontineId ? 'Modifier la tontine' : 'Créer une nouvelle tontine' }}
-          </h2>
-          <span class="badge bg-primary"> Étape {{ etapeActuelle }}/{{ totalEtapes }} </span>
+        <div class="d-flex justify-content-center gap-2 mt-3">
+          <div class="step-dot" [class.active]="etapeActuelle >= 1"></div>
+          <div class="step-line" [class.filled]="etapeActuelle >= 2"></div>
+          <div class="step-dot" [class.active]="etapeActuelle >= 2"></div>
+          <div class="step-line" [class.filled]="etapeActuelle >= 3"></div>
+          <div class="step-dot" [class.active]="etapeActuelle >= 3"></div>
         </div>
       </div>
 
-      <div class="card-body">
-        <div class="progress mb-5" style="height: 8px">
-          <div
-            class="progress-bar bg-primary"
-            role="progressbar"
-            [style.width]="progression + '%'"
-          ></div>
-        </div>
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card-body p-5">
+          <form (ngSubmit)="enregistrerTontine()" #tontineForm="ngForm">
+            <div *ngIf="etapeActuelle === 1" class="fade-in">
+              <h5 class="fw-bold mb-4 text-primary">1. L'Essentiel</h5>
 
-        <form (ngSubmit)="enregistrerTontine()" #tontineForm="ngForm">
-          <div *ngIf="etapeActuelle === 1">
-            <h4 class="mb-4">
-              <i class="bi bi-info-circle text-primary me-2"></i>
-              Informations de base
-            </h4>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="nom" class="form-label">
-                  <i class="bi bi-tag me-1"></i>Nom de la tontine *
-                </label>
+              <label class="form-label">Nom de la Tontine</label>
+              <div class="input-group-custom mb-4">
+                <span class="input-icon"><i class="bi bi-tag"></i></span>
                 <input
                   type="text"
-                  class="form-control"
-                  id="nom"
+                  class="form-control ps-5"
                   [(ngModel)]="nouvelleTontine.nom"
                   name="nom"
                   required
-                  placeholder="Ex: Tontine des Amis"
+                  placeholder="Ex: Épargne Famille"
                 />
               </div>
 
-              <div class="col-md-6 mb-3">
-                <label for="nombre_max_membres" class="form-label">
-                  <i class="bi bi-people me-1"></i>Nombre de membres *
-                </label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="nombre_max_membres"
-                  [(ngModel)]="nouvelleTontine.nombre_max_membres"
-                  name="nombre_max_membres"
-                  required
-                  min="2"
-                  max="50"
-                />
+              <div class="row">
+                <div class="col-md-6">
+                  <label class="form-label">Cotisation (FCFA)</label>
+                  <div class="input-group-custom mb-4">
+                    <span class="input-icon"><i class="bi bi-cash"></i></span>
+                    <input
+                      type="number"
+                      class="form-control ps-5"
+                      [(ngModel)]="nouvelleTontine.montant_cotisation"
+                      name="montant"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Membres Max</label>
+                  <div class="input-group-custom mb-4">
+                    <span class="input-icon"><i class="bi bi-people"></i></span>
+                    <input
+                      type="number"
+                      class="form-control ps-5"
+                      [(ngModel)]="nouvelleTontine.nombre_max_membres"
+                      name="membres"
+                      required
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="mb-3">
-              <label for="description" class="form-label">
-                <i class="bi bi-text-paragraph me-1"></i>Description
-              </label>
-              <textarea
-                class="form-control"
-                id="description"
-                rows="3"
-                [(ngModel)]="nouvelleTontine.description"
-                name="description"
-                placeholder="Décrivez l'objectif..."
-              ></textarea>
+            <div *ngIf="etapeActuelle === 2" class="fade-in">
+              <h5 class="fw-bold mb-4 text-primary">2. Règles du jeu</h5>
+
+              <label class="form-label mb-3">Fréquence de versement</label>
+              <div class="row g-3 mb-4">
+                <div class="col-4" *ngFor="let freq of frequences">
+                  <label
+                    class="selection-card"
+                    [class.selected]="nouvelleTontine.frequence === freq.value"
+                  >
+                    <input
+                      type="radio"
+                      name="frequence"
+                      [value]="freq.value"
+                      [(ngModel)]="nouvelleTontine.frequence"
+                      class="d-none"
+                    />
+                    <i [class]="freq.icon + ' fs-3 mb-2'"></i>
+                    <span class="fw-bold small">{{ freq.label }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <label class="form-label mb-3">Mode de Rotation</label>
+              <div class="d-flex flex-column gap-2">
+                <div *ngFor="let mode of modesRotation">
+                  <label
+                    class="selection-row"
+                    [class.selected]="nouvelleTontine.mode_rotation === mode.value"
+                  >
+                    <input
+                      type="radio"
+                      name="mode"
+                      [value]="mode.value"
+                      [(ngModel)]="nouvelleTontine.mode_rotation"
+                      class="d-none"
+                    />
+                    <div class="d-flex align-items-center">
+                      <div class="check-circle me-3">
+                        <i
+                          class="bi bi-check"
+                          *ngIf="nouvelleTontine.mode_rotation === mode.value"
+                        ></i>
+                      </div>
+                      <div>
+                        <span class="fw-bold d-block">{{ mode.label }}</span>
+                        <small class="text-muted">Le système gère l'ordre automatiquement.</small>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="montant_cotisation" class="form-label">
-                  <i class="bi bi-cash-coin me-1"></i>Montant de cotisation *
-                </label>
-                <div class="input-group">
+            <div *ngIf="etapeActuelle === 3" class="fade-in">
+              <h5 class="fw-bold mb-4 text-primary">3. Vérification</h5>
+
+              <div class="bg-light p-4 rounded-3 text-center mb-4 border border-dashed">
+                <p class="text-muted mb-1">Cagnotte totale par tour</p>
+                <h1 class="display-4 fw-bold text-dark mb-0">
+                  {{ calculerMontantTotal() | number }} <span class="fs-5 text-muted">FCFA</span>
+                </h1>
+              </div>
+
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <small class="text-muted">Date de début</small>
                   <input
-                    type="number"
-                    class="form-control"
-                    id="montant_cotisation"
-                    [(ngModel)]="nouvelleTontine.montant_cotisation"
-                    name="montant_cotisation"
+                    type="date"
+                    class="form-control mt-1"
+                    [(ngModel)]="nouvelleTontine.date_demarrage"
+                    name="date"
                     required
                   />
-                  <span class="input-group-text">FCFA</span>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label d-block">
-                  <i class="bi bi-calculator me-1"></i>Montant total collecté
-                </label>
-                <div class="alert alert-light border">
-                  <div class="h4 mb-0 text-center">{{ calculerMontantTotal() | number }} FCFA</div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div *ngIf="etapeActuelle === 2">
-            <h4 class="mb-4"><i class="bi bi-gear text-primary me-2"></i>Configuration</h4>
-            <div class="row mb-4">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Fréquence *</label>
-                <div class="list-group">
-                  <div *ngFor="let freq of frequences" class="list-group-item">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        [id]="'freq_' + freq.value"
-                        [(ngModel)]="nouvelleTontine.frequence"
-                        name="frequence"
-                        [value]="freq.value"
-                      />
-                      <label class="form-check-label w-100" [for]="'freq_' + freq.value">
-                        <i [class]="freq.icon + ' me-2'"></i>{{ freq.label }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Mode de rotation *</label>
-                <div class="list-group">
-                  <div *ngFor="let mode of modesRotation" class="list-group-item">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        [id]="'mode_' + mode.value"
-                        [(ngModel)]="nouvelleTontine.mode_rotation"
-                        name="mode_rotation"
-                        [value]="mode.value"
-                      />
-                      <label class="form-check-label w-100" [for]="'mode_' + mode.value">
-                        <strong>{{ mode.label }}</strong>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="etapeActuelle === 3">
-            <h4 class="mb-4">
-              <i class="bi bi-calendar-check text-primary me-2"></i>Planification
-            </h4>
-            <div class="row mb-4">
-              <div class="col-md-6 mb-3">
-                <label for="date_demarrage" class="form-label">Date de démarrage *</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="date_demarrage"
-                  [(ngModel)]="nouvelleTontine.date_demarrage"
-                  name="date_demarrage"
-                  required
-                />
-              </div>
-              <div class="col-md-6">
-                <div class="card border-primary">
-                  <div class="card-body">
-                    <h6 class="card-title">Récapitulatif : {{ nouvelleTontine.nom }}</h6>
-                    <p class="small mb-0">
-                      Cotisation : {{ nouvelleTontine.montant_cotisation | number }} FCFA
-                    </p>
-                    <p class="small mb-0">Total : {{ calculerMontantTotal() | number }} FCFA</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="erreur" class="alert alert-danger alert-dismissible fade show">
-            <i class="bi bi-exclamation-triangle me-2"></i> {{ erreur }}
-            <button type="button" class="btn-close" (click)="erreur = null"></button>
-          </div>
-
-          <div *ngIf="success" class="alert alert-success">
-            <i class="bi bi-check-circle me-2"></i>
-            {{ tontineId ? 'Tontine modifiée avec succès !' : 'Tontine créée avec succès !' }}
-          </div>
-
-          <div class="d-flex justify-content-between pt-4 border-top">
-            <button
-              *ngIf="etapeActuelle > 1"
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="reculerEtape()"
-            >
-              <i class="bi bi-arrow-left me-2"></i>Précédent
-            </button>
-            <button
-              *ngIf="etapeActuelle === 1"
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="annuler()"
-            >
-              <i class="bi bi-x-circle me-2"></i>Annuler
-            </button>
-
-            <div>
+            <div class="d-flex justify-content-between mt-5 pt-3 border-top">
               <button
-                *ngIf="etapeActuelle < totalEtapes"
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-light text-muted"
+                (click)="etapeActuelle === 1 ? annuler() : reculerEtape()"
+              >
+                {{ etapeActuelle === 1 ? 'Annuler' : 'Retour' }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-primary btn-glow px-4"
+                *ngIf="etapeActuelle < totalEtapes"
                 (click)="avancerEtape()"
               >
-                Suivant <i class="bi bi-arrow-right ms-2"></i>
+                Suivant
               </button>
-
               <button
-                *ngIf="etapeActuelle === totalEtapes"
                 type="submit"
-                class="btn"
-                [ngClass]="tontineId ? 'btn-warning' : 'btn-success'"
+                class="btn btn-success btn-glow px-4"
+                *ngIf="etapeActuelle === totalEtapes"
                 [disabled]="chargement"
               >
-                <span *ngIf="chargement" class="spinner-border spinner-border-sm me-2"></span>
-                <i [class]="tontineId ? 'bi bi-pencil-square me-2' : 'bi bi-check-circle me-2'"></i>
-                {{ tontineId ? 'Enregistrer les modifications' : 'Créer la tontine' }}
+                Confirmer la création
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>

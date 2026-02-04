@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- 1. Import vital
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { Tontine, StatistiquesTontine, Membre, Paiement, Tour } from '../../../m
   styleUrls: ['./details-tontine.css'],
 })
 export class DetailsTontine implements OnInit {
+  // Propriétés pour stocker les données
   tontine: Tontine | null = null;
   statistiques: StatistiquesTontine | null = null;
   derniersPaiements: Paiement[] = [];
@@ -19,7 +20,7 @@ export class DetailsTontine implements OnInit {
   membres: Membre[] = [];
   chargement = true;
   idTontine: number | null = null;
-  ongletActif = 'informations';
+  ongletActif = 'informations'; // Onglet par défaut
 
   constructor(
     private route: ActivatedRoute,
@@ -76,7 +77,7 @@ export class DetailsTontine implements OnInit {
   }
 
   chargerMembres() {
-    if (!this.idTontine) return;
+    if (!this.idTontine) return; // on verrifie que l'idTontine est défini
 
     this.http.get<Membre[]>(`http://localhost:8000/tontines/${this.idTontine}/membres`).subscribe({
       next: (membres) => {
@@ -91,7 +92,7 @@ export class DetailsTontine implements OnInit {
   }
 
   chargerPaiements() {
-    if (!this.idTontine) return;
+    if (!this.idTontine) return; // on verrifie que l'idTontine est défini
 
     this.http
       .get<Paiement[]>(`http://localhost:8000/tontines/${this.idTontine}/paiements`)
@@ -108,7 +109,7 @@ export class DetailsTontine implements OnInit {
   }
 
   chargerTours() {
-    if (!this.idTontine) return;
+    if (!this.idTontine) return; // on verrifie que l'idTontine est défini
 
     this.http.get<Tour[]>(`http://localhost:8000/tontines/${this.idTontine}/tours`).subscribe({
       next: (tours) => {
@@ -125,13 +126,13 @@ export class DetailsTontine implements OnInit {
   }
 
   changerOnglet(onglet: string) {
-    this.ongletActif = onglet;
+    this.ongletActif = onglet; // Change l'onglet actif
     // Pas besoin de CDR ici car c'est un évènement utilisateur direct (click), Angular gère généralement bien
     // Mais si ça bug, tu peux ajouter this.cdr.detectChanges();
   }
 
   getStatutTontine(): string {
-    if (!this.tontine) return '';
+    if (!this.tontine) return ''; // Si la tontine n'est pas encore chargée
 
     const dateDebut = new Date(this.tontine.date_demarrage);
     const aujourdhui = new Date();
@@ -193,7 +194,7 @@ export class DetailsTontine implements OnInit {
   getMembreActuel(): string {
     if (this.membres.length === 0) return 'Aucun';
 
-    const membreActuel = this.membres.find((m) => m.position === 1);
+    const membreActuel = this.membres.find((m) => m.position === 1); // On suppose que la position 1 est le membre actuel
     return membreActuel ? `Membre #${membreActuel.id_utilisateur}` : 'Aucun';
   }
 
